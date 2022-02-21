@@ -13,7 +13,18 @@ import com.google.android.material.imageview.ShapeableImageView
 class StoryAdapter(var context: Context, var items: ArrayList<Story>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    override fun getItemViewType(position: Int): Int {
+        if (position == 0) {
+            return 0
+        }
+        return 1
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        if (viewType == 0) {
+            val view = LayoutInflater.from(context).inflate(R.layout.item_story_head, parent, false)
+            return HeadStoryViewHolder(view)
+        }
         val view = LayoutInflater.from(context).inflate(R.layout.item_story_view, parent, false)
         return StoryViewHolder(view)
     }
@@ -40,5 +51,7 @@ class StoryAdapter(var context: Context, var items: ArrayList<Story>) :
             fullName.text = item.fullName
         }
     }
+
+    inner class HeadStoryViewHolder(view: View) : RecyclerView.ViewHolder(view)
 
 }
