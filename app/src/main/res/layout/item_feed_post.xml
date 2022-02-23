@@ -10,12 +10,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15dp">
+        android:paddingTop="15dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="12dp">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/iv_profile"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:layout_gravity="center_vertical"
             android:scaleType="centerCrop"
             android:src="@drawable/my_photo"
             app:shapeAppearanceOverlay="@style/circle" />
@@ -223,6 +227,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:background="#cbcbcb" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center_vertical">
 
@@ -280,6 +289,11 @@
             android:textSize="14sp" />
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0.4dp"
+        android:background="#cbcbcb" />
 
     <LinearLayout
         android:layout_width="match_parent"

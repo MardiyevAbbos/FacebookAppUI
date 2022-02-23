@@ -1,20 +1,27 @@
 package com.example.facebookappui.activity
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.facebookappui.R
 import com.example.facebookappui.adapter.FeedAdapter
 import com.example.facebookappui.model.Feed
+import com.example.facebookappui.model.Link
 import com.example.facebookappui.model.Post
 import com.example.facebookappui.model.Story
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: FeedAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +39,24 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshAdapter(feeds: ArrayList<Feed>) {
-        val adapter = FeedAdapter(this, feeds)
+        adapter = FeedAdapter(this, feeds)
         recyclerView.adapter = adapter
     }
+
+    fun openCreatePostActivity() {
+        val intent = Intent(this, CreatePostActivity::class.java)
+        launcher.launch(intent)
+    }
+
+    private val launcher: ActivityResultLauncher<Intent> = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+        ActivityResultCallback<ActivityResult> {
+            if (it.resultCode == 10) {
+                val link = it.data!!.getSerializableExtra("linkResult") as Link
+                adapter.addItem(link)
+            }
+        }
+    )
 
 
     private fun prepareFeedList(): ArrayList<Feed> {
@@ -44,17 +66,63 @@ class MainActivity : AppCompatActivity() {
         // Story
         feeds.add(Feed(getAllStories()))
         // Post
-        feeds.add(Feed(Post(R.drawable.my_photo, "", "Mardiyev Abbos", R.drawable.yangi_yil)))
-        feeds.add(Feed(Post(R.drawable.elyor, "", "Mamayev Elyor", R.drawable.elyor)))
-        feeds.add(Feed(Post(0, "https://images.unsplash.com/photo-1503249023995-51b0f3778ccf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60", "Alimov Doniyor", 0)))
-        feeds.add(Feed(Post(R.drawable.shaxriyor, "", "Mirzamurodov Shaxriyor ", R.drawable.friends)))
+        feeds.add(Feed(Post(R.drawable.my_photo, "", "Abbos Mardiyev", R.drawable.yangi_yil)))
+        feeds.add(Feed(Link(R.drawable.elyor, "Mamayev Elyor", "https://youtu.be/oz3uGdi3f8Q", "", "", "")))
+        feeds.add(
+            Feed(
+                Post(
+                    0,
+                    "https://images.unsplash.com/photo-1503249023995-51b0f3778ccf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MjV8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+                    "Alimov Doniyor",
+                    0
+                )
+            )
+        )
+        feeds.add(
+            Feed(
+                Post(
+                    R.drawable.shaxriyor,
+                    "",
+                    "Mirzamurodov Shaxriyor ",
+                    R.drawable.friends
+                )
+            )
+        )
         feeds.add(Feed(Post(R.drawable.my_photo, "", "Mardiyev Abbos", 0, getManyPostList())))
         feeds.add(Feed(Post(R.drawable.baxtiyor, "", "Maxanov Baxtiyor", R.drawable.azamat)))
-        feeds.add(Feed(Post(0, "https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mzl8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60", "Yelena Gomez", 0)))
+        feeds.add(
+            Feed(
+                Post(
+                    0,
+                    "https://images.unsplash.com/photo-1589571894960-20bbe2828d0a?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mzl8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+                    "Yelena Gomez",
+                    0
+                )
+            )
+        )
         feeds.add(Feed(Post(R.drawable.my_photo, "", "Mardiyev Abbos", R.drawable.yangi_yil)))
-        feeds.add(Feed(Post(R.drawable.shaxriyor, "", "Mirzamurodov Shaxriyor ", 0, getManyPostList())))
+        feeds.add(
+            Feed(
+                Post(
+                    R.drawable.shaxriyor,
+                    "",
+                    "Mirzamurodov Shaxriyor ",
+                    0,
+                    getManyPostList()
+                )
+            )
+        )
         feeds.add(Feed(Post(R.drawable.baxtiyor, "", "Maxanov Baxtiyor", R.drawable.azamat)))
-        feeds.add(Feed(Post(0, "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTF8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60", "Jastin Biber", 0)))
+        feeds.add(
+            Feed(
+                Post(
+                    0,
+                    "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8NTF8fHBlcnNvbnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60",
+                    "Jastin Biber",
+                    0
+                )
+            )
+        )
         feeds.add(Feed(Post(R.drawable.elyor, "", "Mamayev Elyor", R.drawable.elyor)))
 
         return feeds
@@ -72,7 +140,7 @@ class MainActivity : AppCompatActivity() {
         return stories
     }
 
-    private fun getManyPostList(): ArrayList<String>{
+    private fun getManyPostList(): ArrayList<String> {
         val posts: ArrayList<String> = ArrayList()
         posts.add("https://images.unsplash.com/photo-1472214103451-9374bd1c798e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8bmF0dXJlfGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60")
         posts.add("https://media.istockphoto.com/photos/dubai-sky-line-with-traffic-junction-and-burj-khalifa-picture-id469692894?b=1&k=20&m=469692894&s=170667a&w=0&h=ULKQKJVKZTcn63RJ0Flipmk32eAEQRHaSqWSIa2iGlY=")

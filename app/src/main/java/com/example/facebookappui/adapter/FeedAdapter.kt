@@ -20,29 +20,51 @@ import com.example.facebookappui.model.Feed
 import com.example.facebookappui.model.Post
 import com.google.android.material.imageview.ShapeableImageView
 import android.R.id
+import android.content.Intent
 import android.text.Html
 import android.widget.LinearLayout
+import com.example.facebookappui.activity.CreatePostActivity
+import com.example.facebookappui.activity.MainActivity
+import com.example.facebookappui.model.Link
+import com.squareup.picasso.Picasso
+import io.github.ponnamkarthik.richlinkpreview.MetaData
+import io.github.ponnamkarthik.richlinkpreview.ResponseListener
+import io.github.ponnamkarthik.richlinkpreview.RichPreview
+import java.io.File
 
 
-class FeedAdapter(var context: Context, var feeds: ArrayList<Feed>) :
+class FeedAdapter(var context: MainActivity, var feeds: ArrayList<Feed>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private val TYPE_ITEM_HEAD = 0
     private val TYPE_ITEM_STORY = 1
     private val TYPE_ITEM_POST = 2
-    private val TYPE_ITEM_UPDATE_PROFILE = 3
+    private val TYPE_ITEM_LINK = 3
+    private val TYPE_ITEM_UPDATE_PROFILE = 4
+
+    fun addItem(link: Link) {
+        feeds.add(2, Feed(link))
+        notifyDataSetChanged()
+    }
 
     override fun getItemViewType(position: Int): Int {
         var feed = feeds[position]
 
-        if (feed.isHeader) {
-            return TYPE_ITEM_HEAD
-        } else if (feed.stories.size > 0) {
-            return TYPE_ITEM_STORY
-        } else if (feed.post!!.profile == 0) {
-            return TYPE_ITEM_UPDATE_PROFILE
+        return when {
+            feed.isHeader -> {
+                TYPE_ITEM_HEAD
+            }
+            feed.stories.size > 0 -> {
+                TYPE_ITEM_STORY
+            }
+            feed.link != null -> {
+                TYPE_ITEM_LINK
+            }
+            feed.post!!.profile == 0 -> {
+                TYPE_ITEM_UPDATE_PROFILE
+            }
+            else -> TYPE_ITEM_POST
         }
-        return TYPE_ITEM_POST
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -56,6 +78,9 @@ class FeedAdapter(var context: Context, var feeds: ArrayList<Feed>) :
             val view =
                 LayoutInflater.from(context).inflate(R.layout.item_update_profile, parent, false)
             return UpdateProfileViewHolder(view)
+        } else if (viewType == TYPE_ITEM_LINK) {
+            val view = LayoutInflater.from(context).inflate(R.layout.item_feed_link, parent, false)
+            return LinkViewHolder(view)
         }
         val view = LayoutInflater.from(context).inflate(R.layout.item_feed_post, parent, false)
         return PostViewHolder(view)
@@ -64,13 +89,19 @@ class FeedAdapter(var context: Context, var feeds: ArrayList<Feed>) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder) {
             is StoryViewHolder -> {
-                holder.bind(feeds[position])
+                if (holder.adapter == null) {
+                    holder.adapter = StoryAdapter(context, feeds[position].stories)
+                }
+                holder.bind()
             }
             is PostViewHolder -> {
                 holder.bind(feeds[position])
             }
             is UpdateProfileViewHolder -> {
                 holder.bind(feeds[position])
+            }
+            is LinkViewHolder -> {
+                feeds[position].link?.let { holder.bind(it) }
             }
         }
     }
@@ -80,17 +111,25 @@ class FeedAdapter(var context: Context, var feeds: ArrayList<Feed>) :
     }
 
 
-    inner class HeadViewHolder(view: View) : RecyclerView.ViewHolder(view)
+    inner class HeadViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val tvMind: TextView = view.findViewById(R.id.tv_mind)
+
+        init {
+            tvMind.setOnClickListener {
+                context.openCreatePostActivity()
+            }
+        }
+    }
 
 
     inner class StoryViewHolder(private var view: View) : RecyclerView.ViewHolder(view) {
         private val recyclerView: RecyclerView = view.findViewById(R.id.recyclerView)
+        var adapter: StoryAdapter? = null
 
-        fun bind(feed: Feed) {
+        fun bind() {
             recyclerView.layoutManager =
                 LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
 
-            val adapter = StoryAdapter(context, feed.stories)
             recyclerView.adapter = adapter
         }
     }
@@ -109,11 +148,16 @@ class FeedAdapter(var context: Context, var feeds: ArrayList<Feed>) :
             if (post.photo == 0) {
                 ivPhoto.visibility = View.GONE
                 llPhotos.visibility = View.VISIBLE
-                Glide.with(context).load(post.photos?.get(0)).into(view.findViewById(R.id.iv_post_1))
-                Glide.with(context).load(post.photos?.get(1)).into(view.findViewById(R.id.iv_post_2))
-                Glide.with(context).load(post.photos?.get(2)).into(view.findViewById(R.id.iv_post_3))
-                Glide.with(context).load(post.photos?.get(3)).into(view.findViewById(R.id.iv_post_4))
-                Glide.with(context).load(post.photos?.get(4)).into(view.findViewById(R.id.iv_post_5))
+                Glide.with(context).load(post.photos?.get(0))
+                    .into(view.findViewById(R.id.iv_post_1))
+                Glide.with(context).load(post.photos?.get(1))
+                    .into(view.findViewById(R.id.iv_post_2))
+                Glide.with(context).load(post.photos?.get(2))
+                    .into(view.findViewById(R.id.iv_post_3))
+                Glide.with(context).load(post.photos?.get(3))
+                    .into(view.findViewById(R.id.iv_post_4))
+                Glide.with(context).load(post.photos?.get(4))
+                    .into(view.findViewById(R.id.iv_post_5))
             } else {
                 llPhotos.visibility = View.GONE
                 ivPhoto.visibility = View.VISIBLE
@@ -134,6 +178,43 @@ class FeedAdapter(var context: Context, var feeds: ArrayList<Feed>) :
             val sss: String = "<b>" + post.fullName + "</b> " + " updated his profile picture."
             fullName.text = Html.fromHtml(sss)
         }
+    }
+
+    inner class LinkViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        private val profile: ShapeableImageView = view.findViewById(R.id.iv_profile)
+        private val fullName: TextView = view.findViewById(R.id.tv_fullName)
+        private val link: TextView = view.findViewById(R.id.tv_link)
+        private val ivPhoto: ImageView = view.findViewById(R.id.iv_photo)
+        private val siteName: TextView = view.findViewById(R.id.tv_siteName)
+        private val siteInfo: TextView = view.findViewById(R.id.tv_linkInfo)
+
+        fun bind(item: Link) {
+            profile.setImageResource(item.profile)
+            fullName.text = item.fullName
+            link.text = item.link
+            if (item.imageUrl == "") {
+                ivPhoto.visibility = View.GONE
+            } else {
+                ivPhoto.visibility = View.VISIBLE
+                Picasso.get().load(item.imageUrl).into(ivPhoto)
+            }
+
+            if (item.linkName == "") {
+                siteName.visibility = View.GONE
+            } else {
+                siteName.visibility = View.VISIBLE
+                siteName.text = item.linkName
+            }
+
+            if (item.linkTitle == "") {
+                siteInfo.visibility = View.GONE
+            } else {
+                siteInfo.visibility = View.VISIBLE
+                siteInfo.text = item.linkTitle
+            }
+
+        }
+
     }
 
 }
