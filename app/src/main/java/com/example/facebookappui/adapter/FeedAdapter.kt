@@ -25,6 +25,7 @@ import android.text.Html
 import android.widget.LinearLayout
 import com.example.facebookappui.activity.CreatePostActivity
 import com.example.facebookappui.activity.MainActivity
+import com.example.facebookappui.application.App
 import com.example.facebookappui.model.Link
 import com.squareup.picasso.Picasso
 import io.github.ponnamkarthik.richlinkpreview.MetaData

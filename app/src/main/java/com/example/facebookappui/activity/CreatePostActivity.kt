@@ -18,6 +18,7 @@ import com.squareup.picasso.Picasso
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.schedulers.Schedulers
 import org.jsoup.nodes.Document
+import java.net.URL
 
 class CreatePostActivity : AppCompatActivity() {
 
@@ -89,7 +90,7 @@ class CreatePostActivity : AppCompatActivity() {
                 val link: Link = if (llStatePost.visibility == View.GONE){
                     Link(R.drawable.my_photo, "Abbos Mardiyev", edtMind.text.toString(),"","","")
                 }else{
-                    Link(R.drawable.my_photo, "Abbos Mardiyev", edtMind.text.toString(),postPhoto,postTitle, postName)
+                    Link(R.drawable.my_photo, "Abbos Mardiyev", edtMind.text.toString(),postPhoto,postName, postTitle)
                 }
                 sendResultSerializable(link)
             }
@@ -120,12 +121,13 @@ class CreatePostActivity : AppCompatActivity() {
                             Picasso.get().load(postPhoto).into(ivPhoto)
                         }
                         element.attr("property").equals("og:description") -> {
-                            postName = element.attr("content")
-                            tvLinkTitle.text = postName
+                            val uri = URL(url)
+                            postName = uri.host
+                            tvLinkName.text = postName
                         }
                         element.attr("property").equals("og:title") -> {
                             postTitle = element.attr("content")
-                            tvLinkName.text = postTitle
+                            tvLinkTitle.text = postTitle
                         }
                     }
                 }

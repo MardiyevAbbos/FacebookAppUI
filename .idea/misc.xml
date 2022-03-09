@@ -6,6 +6,8 @@
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable-anydpi/ic_add_circle.xml" value="0.21574074074074073" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/btn_shape_rounded_border_blue.xml" value="0.2203125" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/btn_shape_rounded_border_gray.xml" value="0.2203125" />
+        <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/click_color_tab_layout_items.xml" value="0.2203125" />
+        <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/click_color_tablayout_items.xml" value="0.2203125" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/shape_border_circle.xml" value="0.2169230769230769" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/shape_border_rounded.xml" value="0.2203125" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/drawable/shape_circle_border.xml" value="0.21574074074074073" />
@@ -20,7 +22,7 @@
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/layout/item_feed_story.xml" value="0.20416666666666666" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/layout/item_story_head.xml" value="0.5" />
         <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/layout/item_story_view.xml" value="0.25" />
-        <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/layout/item_update_profile.xml" value="0.33" />
+        <entry key="..\:/AndroidProjects/PDPAndroidProjects/Android Intermediate(5-modul)/Lesson09/FacebookAppUI(Kotlin)/app/src/main/res/layout/item_update_profile.xml" value="0.25" />
       </map>
     </option>
   </component>
